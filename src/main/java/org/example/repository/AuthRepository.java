@@ -6,6 +6,7 @@ import org.example.dto.Purchase;
 import org.example.dto.UserCard;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     public String currentDateTime() {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -61,7 +63,7 @@ public class AuthRepository {
 
     public boolean save(AuthUser user) {
         String sql = "insert into authUser (username,phoneNumber,password) values (?,?,?)";
-        int n = jdbcTemplate.update(sql, user.getUsername(), user.getPhoneNumber(), user.getPassword());
+        int n = jdbcTemplate.update(sql, user.getUsername(), user.getPhoneNumber(), passwordEncoder.encode(user.getPassword()));
         return n == 1 ? true : false;
     }
 

@@ -3,6 +3,7 @@ package org.example.other;
 import lombok.RequiredArgsConstructor;
 import org.example.repository.AuthRepository;
 import org.example.dto.AuthUser;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -12,6 +13,7 @@ public class AuthService {
     private final AuthRepository authRepository;
     private final ScannerService scanner;
     private final ShowMenu showMenu;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthUser login() {
         String phoneNumber = showMenu.checkPhoneNumber();
@@ -22,7 +24,7 @@ public class AuthService {
             System.out.println("\n---------------------------------------------");
             System.out.println("|  >< THE PHONE NUMBER IS NOT REGISTERED ><  |");
             System.out.println(" --------------------------------------------");
-        } else if (!user.getPassword().equals(password)) {
+        } else if (!passwordEncoder.matches(password, user.getPassword())) {
             System.out.println("\n------------------------------------");
             System.out.println("|  >< THE PASSWORD IS INCORRECT ><  |");
             System.out.println(" -----------------------------------");
